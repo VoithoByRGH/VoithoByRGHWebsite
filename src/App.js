@@ -29,7 +29,7 @@ function Heading({ eyebrow, title, subtitle }) {
 
 const NAV = [
   { href: "#services", label: "Services" },
-  { href: "#portfolio", label: "Portfolio" },
+  { href: "#portfolio", label: "Portfolio", comingSoon: true },
   { href: "#packages", label: "Packages" },
   { href: "#process", label: "Process" },
   { href: "#faq", label: "FAQ" },
@@ -69,6 +69,17 @@ const SERVICES = [
     bullets: ["30–60s edits", "9:16 + 16:9 delivery", "On-brand music"],
     tag: "Social",
   },
+  {
+    icon: "✨",
+    title: "Custom Projects",
+    desc: "Not seeing your project listed? From events to brand storytelling and beyond — I can tailor a film to match your exact vision.",
+    bullets: [
+      "Flexible scope",
+      "Tailored deliverables",
+      "Email to arrange details",
+    ],
+    tag: "Custom",
+  },
 ];
 
 const PACKAGES = [
@@ -94,6 +105,16 @@ const PACKAGES = [
       "Quarterly recap",
     ],
     note: "Keep stakeholders aligned with zero friction.",
+  },
+  {
+    name: "Custom Projects",
+    price: "Email for quote",
+    points: [
+      "Tailored to your vision",
+      "Flexible scope and style",
+      "Available for brands, events & more",
+    ],
+    note: "Get in touch with your ideas and we’ll create a package that fits.",
   },
 ];
 
@@ -136,13 +157,16 @@ export default function App() {
           </a>
           <nav className="hidden md:flex items-center gap-6">
             {NAV.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                className="text-sm hover:underline"
-              >
-                {item.label}
-              </a>
+              <div key={item.href} className="flex items-center gap-1">
+                <a href={item.href} className="text-sm hover:underline">
+                  {item.label}
+                </a>
+                {item.comingSoon && (
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-black text-white border border-white/60 select-none">
+                    ★ Coming Soon
+                  </span>
+                )}
+              </div>
             ))}
             <a
               href="#contact"
@@ -181,7 +205,7 @@ export default function App() {
             <h1 className="font-display text-4xl sm:text-6xl leading-[1.1]">
               Cinematic films for{" "}
               <span className="underline decoration-white/40 decoration-4 underline-offset-8"></span>
-              ,brands & beautiful spaces.
+              brands & beautiful spaces.
             </h1>
             <p className="mt-6 text-base sm:text-lg text-white/85">
               Calm presence. Clean sound. Elegant color. Deliverables that
@@ -198,7 +222,7 @@ export default function App() {
                 href="#portfolio"
                 className="px-5 py-3 rounded-full border border-white/40 text-sm hover:border-white/70 transition"
               >
-                Watch portfolio
+                Portfolio Coming Soon
               </a>
             </div>
           </div>
@@ -210,7 +234,7 @@ export default function App() {
         <Heading
           eyebrow="What I Do"
           title="Full-service freelance videography"
-          subtitle="From intimate vows to aerial reveals — tailored films with a calm, professional approach."
+          subtitle="From dynamic brand stories to property showcases — tailored films with a calm, professional touch."
         />
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {SERVICES.map((s, i) => (
@@ -319,7 +343,7 @@ export default function App() {
             </form>
             <div className="rounded-2xl border border-gray-700 p-6 bg-black space-y-4 text-sm">
               <div>📍 Paphos, Cyprus</div>
-              <div>✉️ info@voithobyrgh</div>
+              <div>✉️ info@voithobyrgh.com</div>
               <a
                 className="underline"
                 href="https://instagram.com/voithobyrgh"
