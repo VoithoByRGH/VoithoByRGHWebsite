@@ -1,3 +1,5 @@
+import "./index.css"; // import the global CSS with vimeo-cover rules
+
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 

@@ -1,0 +1,22 @@
+/* Global reset or tailwind base can still go here if you use them */
+
+/* Vimeo iframe should behave like background-image: cover */
+.vimeo-cover {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 0;
+
+  /* Default for wide screens: fill width */
+  width: 100vw;
+  height: 56.25vw; /* 9/16 of width */
+}
+
+/* For tall/narrow screens: fill height instead */
+@media (max-aspect-ratio: 16/9) {
+  .vimeo-cover {
+    width: 177.78vh; /* 16/9 of height */
+    height: 100vh;
+  }
+}

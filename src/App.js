@@ -160,21 +160,17 @@ export default function App() {
         className="relative min-h-screen flex items-center overflow-hidden"
       >
         {/* Video (bottom layer) */}
-        <iframe
-          title="vimeo-background"
-          src="https://player.vimeo.com/video/1120673066?background=1&autoplay=1&muted=1&loop=1"
-          frameBorder="0"
-          allow="autoplay; fullscreen"
-          allowFullScreen
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            pointerEvents: "none",
-          }}
-        />
+        <div className="absolute inset-0 z-0 overflow-hidden">
+          <iframe
+            title="vimeo-background"
+            src="https://player.vimeo.com/video/1120673066?h=63f4005c67&background=1&autoplay=1&muted=1&loop=1&playsinline=1"
+            frameBorder="0"
+            allow="autoplay; fullscreen"
+            allowFullScreen
+            className="vimeo-cover"
+            style={{ pointerEvents: "none" }}
+          />
+        </div>
 
         {/* One LIGHT overlay for readability (middle layer) */}
         <div className="absolute inset-0 z-10 bg-black/30"></div>
