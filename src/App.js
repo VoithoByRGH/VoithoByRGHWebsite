@@ -161,13 +161,13 @@ export default function App() {
       >
         {/* Video (bottom layer) */}
         <iframe
-          src="https://player.vimeo.com/video/1120673066?autoplay=1&muted=1&loop=1&background=1"
-          className="absolute inset-0 w-full h-full scale-125 z-0"
-          frameBorder="0"
-          allow="autoplay; fullscreen"
-          allowFullScreen
-          title="Voithó Showreel"
-        ></iframe>
+  title="vimeo-background"
+  src="https://player.vimeo.com/video/1120673066?background=1&autoplay=1&muted=1&loop=1"
+  frameborder="0"
+  allow="autoplay; fullscreen"
+  allowfullscreen
+  style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;"
+></iframe>
 
         {/* One LIGHT overlay for readability (middle layer) */}
         <div className="absolute inset-0 z-10 bg-black/30"></div>
