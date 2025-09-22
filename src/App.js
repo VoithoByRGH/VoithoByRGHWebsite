@@ -37,21 +37,21 @@ const NAV = [
 
 const SERVICES = [
   {
-    icon: "🛩️",
+    icon: "",
     title: "Aerial / Drone",
     desc: "Beautiful, stable aerials for property, tourism, and social assets. Fully insured with local compliance.",
     bullets: ["3–5 hero shots", "Reels-ready clips", "Construction progress"],
     tag: "Aerial",
   },
   {
-    icon: "🏠",
+    icon: "",
     title: "Real Estate",
     desc: "Fast-turnaround property walk-throughs and reels that convert viewings.",
     bullets: ["1–2 minute showcase", "Drone add-on", "Photo bundles"],
     tag: "Property",
   },
   {
-    icon: "🏗️",
+    icon: "",
     title: "Construction Updates",
     desc: "Monthly visual progress for developers and clients — the simplest way to document milestones.",
     bullets: [
@@ -62,14 +62,14 @@ const SERVICES = [
     tag: "Progress",
   },
   {
-    icon: "🏪",
+    icon: "",
     title: "Local Business Promos",
     desc: "Snackable promos for cafes, gyms, schools, and brands — designed for social impact.",
     bullets: ["30–60s edits", "9:16 + 16:9 delivery", "On-brand music"],
     tag: "Social",
   },
   {
-    icon: "✨",
+    icon: "",
     title: "Custom Projects",
     desc: "Not seeing your project listed? From events to brand storytelling and beyond — I can tailor a film to match your exact vision.",
     bullets: [
@@ -252,7 +252,7 @@ export default function App() {
               <ul className="space-y-2 text-sm">
                 {s.bullets.map((b, j) => (
                   <li key={j} className="flex items-start gap-2">
-                    ✅ {b}
+                    {b}
                   </li>
                 ))}
               </ul>
@@ -280,7 +280,7 @@ export default function App() {
                 <ul className="space-y-2 text-sm my-4">
                   {pkg.points.map((pt, j) => (
                     <li key={j} className="flex items-start gap-2">
-                      ✅ {pt}
+                      {pt}
                     </li>
                   ))}
                 </ul>
