@@ -1,0 +1,8 @@
+[build]
+  command = "CI=false pnpm build"
+  publish = "build"
+
+[build.environment]
+  NODE_VERSION = "18"
+  NETLIFY_USE_PNPM = "true"
+  NETLIFY_USE_YARN = "false"
