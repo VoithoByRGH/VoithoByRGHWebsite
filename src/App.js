@@ -31,7 +31,6 @@ const NAV = [
   { href: "#services", label: "Services" },
   { href: "#portfolio", label: "Portfolio", comingSoon: true },
   { href: "#packages", label: "Packages" },
-  { href: "#process", label: "Process" },
   { href: "#faq", label: "FAQ" },
   { href: "#contact", label: "Contact" },
 ];
@@ -187,7 +186,7 @@ export default function App() {
         <div className="absolute inset-0 z-0 overflow-hidden">
           <iframe
             title="vimeo-background"
-            src="https://player.vimeo.com/video/1120673066?h=63f4005c67&background=1&autoplay=1&muted=1&loop=1&playsinline=1"
+            src="https://player.vimeo.com/video/1120984476?h=9a5b713a23&background=1&autoplay=1&muted=1&loop=1"
             frameBorder="0"
             allow="autoplay; fullscreen"
             allowFullScreen
@@ -200,18 +199,16 @@ export default function App() {
         <div className="absolute inset-0 z-10 bg-black/30"></div>
 
         {/* Content (top layer) */}
-        <Section className="relative z-20 py-16 sm:py-24">
-          <div className="max-w-3xl">
+        <Section className="relative z-20 py-16 sm:py-24 !max-w-none !mx-0">
+          <div className="max-w-3xl text-center sm:text-left px-6 sm:pl-12 mt-10 sm:mt-20">
             <h1 className="font-display text-4xl sm:text-6xl leading-[1.1]">
-              Cinematic films for{" "}
-              <span className="underline decoration-white/40 decoration-4 underline-offset-8"></span>
-              brands & beautiful spaces.
+              Cinematic films for brands & beautiful spaces.
             </h1>
             <p className="mt-6 text-base sm:text-lg text-white/85">
               Calm presence. Clean sound. Elegant color. Deliverables that
               perform on social.
             </p>
-            <div className="mt-10 flex flex-wrap gap-3">
+            <div className="mt-10 flex flex-wrap justify-center sm:justify-start gap-3">
               <a
                 href="#contact"
                 className="px-5 py-3 rounded-full bg-white text-black text-sm hover:bg-gray-200 transition"
@@ -231,6 +228,8 @@ export default function App() {
 
       {/* SERVICES */}
       <Section id="services" className="py-16">
+        {/* Invisible SEO heading */}
+        <h2 className="sr-only">Cyprus Videographer Services</h2>
         <Heading
           eyebrow="What I Do"
           title="Full-service freelance videography"
