@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Root domain -->
+  <url>
+    <loc>https://voithobyrgh.com/</loc>
+    <lastmod>2025-09-23</lastmod>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- www version (redirects to root, but include for safety) -->
+  <url>
+    <loc>https://www.voithobyrgh.com/</loc>
+    <lastmod>2025-09-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+</urlset>
