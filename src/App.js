@@ -122,19 +122,13 @@ const FAQ = [
     q: "Where are you based?",
     a: "Paphos / Cyprus, available island-wide and for travel.",
   },
-  {
-    q: "What do you deliver?",
-    a: "Reels-ready cuts (9:16 + 16:9).",
-  },
+  { q: "What do you deliver?", a: "Reels-ready cuts (9:16 + 16:9)." },
   { q: "Do you fly drones?", a: "Yes — subject to weather and permissions." },
   {
     q: "How do bookings work?",
     a: "Simple agreement + deposit to secure your date; balance on delivery.",
   },
-  {
-    q: "Turnaround times?",
-    a: "Promos 7–10 days; real estate 2–3 days.",
-  },
+  { q: "Turnaround times?", a: "Promos 7–10 days; real estate 2–3 days." },
   {
     q: "Can you work with agencies?",
     a: "Absolutely. White-label or subcontract with clear deliverables.",
@@ -142,6 +136,37 @@ const FAQ = [
 ];
 
 export default function App() {
+  // --- Netlify AJAX helpers ---
+  const encode = (data) => new URLSearchParams(data).toString(); // URL-encode (required for Netlify AJAX) :contentReference[oaicite:1]{index=1}
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const payload = {
+      "form-name": form.getAttribute("name"),
+      name: form.name.value,
+      email: form.email.value,
+      message: form.message.value,
+    };
+
+    try {
+      const res = await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: encode(payload),
+      });
+      if (res.ok) {
+        form.reset();
+        alert("Thank you! Your enquiry has been sent.");
+      } else {
+        alert("Oops! There was a problem submitting your enquiry.");
+      }
+    } catch (err) {
+      alert("Error: " + err);
+    }
+  };
+  // ----------------------------
+
   return (
     <div className="min-h-screen bg-black text-white">
       {/* NAVBAR */}
@@ -195,10 +220,10 @@ export default function App() {
           />
         </div>
 
-        {/* One LIGHT overlay for readability (middle layer) */}
+        {/* Light overlay */}
         <div className="absolute inset-0 z-10 bg-black/30"></div>
 
-        {/* Content (top layer) */}
+        {/* Content */}
         <Section className="relative z-20 py-16 sm:py-24 !max-w-none !mx-0">
           <div className="max-w-3xl text-center sm:text-left px-6 sm:pl-12 mt-10 sm:mt-20">
             <h1 className="font-display text-4xl sm:text-6xl leading-[1.1]">
@@ -228,7 +253,6 @@ export default function App() {
 
       {/* SERVICES */}
       <Section id="services" className="py-16">
-        {/* Invisible SEO heading */}
         <h2 className="sr-only">Cyprus Videographer Services</h2>
         <Heading
           eyebrow="What I Do"
@@ -316,30 +340,56 @@ export default function App() {
             subtitle="Tell me a little about your project and preferred date(s). I’ll reply with a tailored quote."
           />
           <div className="grid lg:grid-cols-2 gap-6">
-            <form className="rounded-2xl border border-gray-700 p-6 bg-black space-y-4">
+            <form
+              name="enquiry"
+              method="POST"
+              data-netlify="true"
+              netlify-honeypot="bot-field"
+              className="rounded-2xl border border-gray-700 p-6 bg-black space-y-4"
+              onSubmit={handleSubmit}
+            >
+              {/* Netlify requires this hidden field to match the form name */}
+              <input type="hidden" name="form-name" value="enquiry" />
+
+              {/* Honeypot for spam (hidden) */}
+              <p className="hidden">
+                <label>
+                  Don’t fill this out: <input name="bot-field" />
+                </label>
+              </p>
+
               <div className="grid sm:grid-cols-2 gap-4">
                 <input
+                  name="name"
                   className="w-full border rounded-lg px-3 py-2 text-black"
                   placeholder="Your name"
+                  required
                 />
                 <input
+                  name="email"
                   className="w-full border rounded-lg px-3 py-2 text-black"
                   type="email"
                   placeholder="Email"
+                  required
                 />
               </div>
+
               <textarea
+                name="message"
                 className="w-full border rounded-lg px-3 py-2 text-black"
-                rows="5"
+                rows={5}
                 placeholder="Tell me about your vision…"
+                required
               />
+
               <button
                 className="w-full px-4 py-2 rounded-lg bg-white text-black text-sm hover:bg-gray-200"
-                type="button"
+                type="submit"
               >
                 Send enquiry
               </button>
             </form>
+
             <div className="rounded-2xl border border-gray-700 p-6 bg-black space-y-4 text-sm">
               <div>📍 Paphos, Cyprus</div>
               <div>✉️ info@voithobyrgh.com</div>
@@ -359,7 +409,6 @@ export default function App() {
       {/* FOOTER */}
       <footer className="py-10">
         <Section className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm">
-          {/* Left: Logo + copyright */}
           <div className="flex items-center gap-3">
             <img
               src="/VoithoLOGOv2.png"
@@ -370,8 +419,6 @@ export default function App() {
               © {new Date().getFullYear()} VoithóByRGH. All rights reserved.
             </span>
           </div>
-
-          {/* Right: Quick links */}
           <div className="flex items-center gap-3 text-gray-300">
             <a href="#services" className="hover:underline">
               Services
