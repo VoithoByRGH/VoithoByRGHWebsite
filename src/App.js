@@ -137,7 +137,7 @@ const FAQ = [
 
 export default function App() {
   // --- Netlify AJAX helpers ---
-  const encode = (data) => new URLSearchParams(data).toString(); // URL-encode (required for Netlify AJAX) :contentReference[oaicite:1]{index=1}
+  const encode = (data) => new URLSearchParams(data).toString();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -326,7 +326,7 @@ export default function App() {
       </Section>
 
       {/* CONTACT */}
-      <div className="bg-gray-900 border-y border-gray-800">
+      <div className="bg-black-900 border-y border-gray-800">
         <Section id="contact" className="py-16">
           <Heading
             eyebrow="Let’s talk"
