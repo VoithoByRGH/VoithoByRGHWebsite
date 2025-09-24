@@ -39,7 +39,7 @@ const SERVICES = [
   {
     icon: "",
     title: "Aerial / Drone",
-    desc: "Beautiful, stable aerials for property, tourism, and social assets. Fully insured with local compliance.",
+    desc: "Beautiful, stable aerials for property, tourism, and social assets.",
     bullets: ["3–5 hero shots", "Reels-ready clips", "Construction progress"],
     tag: "Aerial",
   },
@@ -239,12 +239,6 @@ export default function App() {
                 className="px-5 py-3 rounded-full bg-white text-black text-sm hover:bg-gray-200 transition"
               >
                 Check availability
-              </a>
-              <a
-                href="#portfolio"
-                className="px-5 py-3 rounded-full border border-white/40 text-sm hover:border-white/70 transition"
-              >
-                Portfolio Coming Soon
               </a>
             </div>
           </div>
