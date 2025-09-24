@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="theme-color" content="#000000" />
+
+    <!-- Primary SEO -->
+    <title>VoithóByRGH | Cyprus Videographer</title>
     <meta
       name="description"
       content="VoithóByRGH – Cyprus videographer offering real estate films, brand promos, aerials, and custom video projects."
@@ -9,15 +18,51 @@
       name="keywords"
       content="Cyprus videographer, Paphos videography, real estate films, business promo videos, drone videography Cyprus"
     />
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <meta name="theme-color" content="#000000" />
-    <title>VoithóByRGH | Cyprus Videographer</title>
+    <link rel="canonical" href="https://voithobyrgh.com/" />
+    <meta name="robots" content="index,follow" />
 
-    <!-- Manifest + Favicon (Create React App placeholders) -->
+    <!-- Open Graph (Facebook / LinkedIn) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="VoithóByRGH" />
+    <meta property="og:title" content="VoithóByRGH | Cyprus Videographer" />
+    <meta
+      property="og:description"
+      content="Cinematic freelance videography in Cyprus: brand stories, real estate films, construction updates, and social-first promos."
+    />
+    <meta property="og:url" content="https://voithobyrgh.com/" />
+    <meta property="og:image" content="https://voithobyrgh.com/og-image.jpg" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="VoithóByRGH | Cyprus Videographer" />
+    <meta
+      name="twitter:description"
+      content="Brand, property & aerial videography in Cyprus. Social-ready deliverables."
+    />
+    <meta name="twitter:image" content="https://voithobyrgh.com/og-image.jpg" />
+
+    <!-- JSON-LD (LocalBusiness schema) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "name": "VoithóByRGH",
+        "url": "https://voithobyrgh.com/",
+        "image": "https://voithobyrgh.com/og-image.jpg",
+        "email": "info@voithobyrgh.com",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Paphos",
+          "addressCountry": "CY"
+        },
+        "areaServed": "Cyprus",
+        "sameAs": ["https://instagram.com/voithobyrgh"],
+        "description": "Cinematic freelance videography in Cyprus for brands, real estate, and local businesses.",
+        "priceRange": "€100€250"
+      }
+    </script>
+
+    <!-- Manifest + Favicon -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <link rel="icon" href="%PUBLIC_URL%/vicon.ico" />
 
@@ -29,27 +74,15 @@
       rel="stylesheet"
     />
 
-    <!-- public/index.html (inside <body>) -->
-    <form
-      name="enquiry"
-      data-netlify="true"
-      netlify-honeypot="bot-field"
-      hidden
-    >
-      <input type="text" name="name" />
-      <input type="email" name="email" />
-      <textarea name="message"></textarea>
-    </form>
-
     <!-- Tailwind (CDN) + inline config -->
     <script>
       tailwind.config = {
         theme: {
           extend: {
             colors: {
-              accent: "#D4AF37" /* soft gold */,
-              ink: "#EAEAEA" /* refined white */,
-              panel: "rgba(255,255,255,0.04)" /* glass panels */,
+              accent: "#D4AF37",
+              ink: "#EAEAEA",
+              panel: "rgba(255,255,255,0.04)",
             },
             fontFamily: {
               sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
@@ -68,5 +101,17 @@
   <body class="bg-black text-white font-sans">
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+
+    <!-- Netlify hidden form (for submissions) -->
+    <form
+      name="enquiry"
+      data-netlify="true"
+      netlify-honeypot="bot-field"
+      hidden
+    >
+      <input type="text" name="name" />
+      <input type="email" name="email" />
+      <textarea name="message"></textarea>
+    </form>
   </body>
 </html>
