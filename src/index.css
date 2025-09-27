@@ -3,9 +3,9 @@
 /* Vimeo iframe should behave like background-image: cover */
 .vimeo-cover {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  inset: 0;
+  width: 100%;
+  height: 100%;
   border: 0;
 
   /* Default for wide screens: fill width */
@@ -19,4 +19,7 @@
     width: 177.78vh; /* 16/9 of height */
     height: 100vh;
   }
+}
+html {
+  scroll-behavior: smooth;
 }

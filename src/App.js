@@ -1,5 +1,8 @@
+// src/App.js
 import React from "react";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
+/* ========== Shared UI ========== */
 function Section({ id, children, className = "" }) {
   return (
     <section
@@ -27,9 +30,10 @@ function Heading({ eyebrow, title, subtitle }) {
   );
 }
 
+/* ========== Data ========== */
 const NAV = [
   { href: "#services", label: "Services" },
-  { href: "#portfolio", label: "Portfolio", comingSoon: true },
+  { href: "/portfolio", label: "Portfolio", comingSoon: true }, // now a route
   { href: "#packages", label: "Packages" },
   { href: "#faq", label: "FAQ" },
   { href: "#contact", label: "Contact" },
@@ -135,7 +139,8 @@ const FAQ = [
   },
 ];
 
-export default function App() {
+/* ========== Home Page ========== */
+function Home() {
   // --- Netlify AJAX helpers ---
   const encode = (data) => new URLSearchParams(data).toString();
 
@@ -180,18 +185,27 @@ export default function App() {
             />
           </a>
           <nav className="hidden md:flex items-center gap-6">
-            {NAV.map((item) => (
-              <div key={item.href} className="flex items-center gap-1">
-                <a href={item.href} className="text-sm hover:underline">
-                  {item.label}
-                </a>
-                {item.comingSoon && (
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-black text-white border border-white/60 select-none">
-                    ★ Coming Soon
-                  </span>
-                )}
-              </div>
-            ))}
+            {NAV.map((item) => {
+              const isRoute = item.href.startsWith("/");
+              return (
+                <div key={item.href} className="flex items-center gap-1">
+                  {isRoute ? (
+                    <Link to={item.href} className="text-sm hover:underline">
+                      {item.label}
+                    </Link>
+                  ) : (
+                    <a href={item.href} className="text-sm hover:underline">
+                      {item.label}
+                    </a>
+                  )}
+                  {item.comingSoon && (
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-black text-white border border-white/60 select-none">
+                      ★ Coming Soon
+                    </span>
+                  )}
+                </div>
+              );
+            })}
             <a
               href="#contact"
               className="px-4 py-2 rounded-lg bg-black text-white text-sm hover:bg-gray-800"
@@ -221,7 +235,7 @@ export default function App() {
         </div>
 
         {/* Light overlay */}
-        <div className="absolute inset-0 z-10 bg-black/30"></div>
+        <div className="absolute inset-0 z-10 bg-black/30" />
 
         {/* Content */}
         <Section className="relative z-20 py-16 sm:py-24 !max-w-none !mx-0">
@@ -427,5 +441,122 @@ export default function App() {
         </Section>
       </footer>
     </div>
+  );
+}
+
+/* ========== Portfolio Page (/portfolio) ========== */
+function Portfolio() {
+  return (
+    <main className="min-h-screen flex flex-col bg-black text-white">
+      {/* Header */}
+      <header className="bg-white text-black border-b">
+        <Section className="flex items-center justify-between py-3">
+          <Link to="/" className="flex items-center gap-2">
+            <img
+              src="/VoithoLOGOv2blk.png"
+              alt="Voithó by RGH"
+              className="h-45 w-40"
+            />
+          </Link>
+          <nav className="hidden md:flex items-center gap-6">
+            <Link to="/" className="text-sm hover:underline">
+              Home
+            </Link>
+            <a
+              href="https://instagram.com/voithobyrgh"
+              target="_blank"
+              rel="noreferrer"
+              className="text-sm hover:underline"
+            >
+              Instagram
+            </a>
+            <Link
+              to="/#contact"
+              className="px-4 py-2 rounded-lg bg-black text-white text-sm hover:bg-gray-800"
+            >
+              Get a Quote
+            </Link>
+          </nav>
+        </Section>
+      </header>
+
+      {/* Hero with the SAME background as Home */}
+      <section className="relative min-h-screen flex items-center overflow-hidden">
+        {/* Video (bottom layer) */}
+        <div className="absolute inset-0 z-0 overflow-hidden">
+          <iframe
+            title="vimeo-background"
+            src="https://player.vimeo.com/video/1120984476?h=9a5b713a23&background=1&autoplay=1&muted=1&loop=1"
+            frameBorder="0"
+            allow="autoplay; fullscreen"
+            allowFullScreen
+            className="vimeo-cover"
+            style={{ pointerEvents: "none" }}
+          />
+        </div>
+
+        {/* Light overlay */}
+        <div className="absolute inset-0 z-10 bg-black/30" />
+
+        {/* Content */}
+        <Section className="relative z-20 py-24">
+          <Heading
+            eyebrow="Work"
+            title="Portfolio"
+            subtitle="🚧 This page is under construction. Check back soon for recent projects."
+          />
+          <div className="mx-auto max-w-2xl rounded-2xl border border-gray-800 bg-black/60 backdrop-blur p-8 text-center">
+            <p className="text-gray-200">
+              I’m curating a tight selection of films right now.
+            </p>
+            <p className="text-gray-300 mt-2">
+              In the meantime, see snippets on{" "}
+              <a
+                className="underline"
+                href="https://instagram.com/voithobyrgh"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Instagram
+              </a>
+              .
+            </p>
+          </div>
+        </Section>
+      </section>
+
+      {/* Footer */}
+      <footer className="py-10">
+        <Section className="flex items-center justify-between gap-4 text-sm">
+          <div className="flex items-center gap-3">
+            <img
+              src="/VoithoLOGOv2.png"
+              alt="Voithó by RGH"
+              className="h-8 w-auto"
+            />
+            <span className="text-gray-400">
+              © {new Date().getFullYear()} VoithóByRGH. All rights reserved.
+            </span>
+          </div>
+          <div className="flex items-center gap-3 text-gray-300">
+            <Link to="/" className="hover:underline">
+              Back to Home
+            </Link>
+          </div>
+        </Section>
+      </footer>
+    </main>
+  );
+}
+
+/* ========== Router Shell ========== */
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/portfolio" element={<Portfolio />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
