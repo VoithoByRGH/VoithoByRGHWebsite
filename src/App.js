@@ -33,7 +33,7 @@ function Heading({ eyebrow, title, subtitle }) {
 /* ========== Data ========== */
 const NAV = [
   { href: "#services", label: "Services" },
-  { href: "/portfolio", label: "Portfolio", comingSoon: true }, // now a route
+  { href: "/portfolio", label: "Portfolio", comingSoon: false }, // now LIVE
   { href: "#packages", label: "Packages" },
   { href: "#faq", label: "FAQ" },
   { href: "#contact", label: "Contact" },
@@ -348,56 +348,7 @@ function Home() {
             subtitle="Tell me a little about your project and preferred date(s). I’ll reply with a tailored quote."
           />
           <div className="grid lg:grid-cols-2 gap-6">
-            <form
-              name="enquiry"
-              method="POST"
-              data-netlify="true"
-              netlify-honeypot="bot-field"
-              className="rounded-2xl border border-gray-700 p-6 bg-black space-y-4"
-              onSubmit={handleSubmit}
-            >
-              {/* Netlify requires this hidden field to match the form name */}
-              <input type="hidden" name="form-name" value="enquiry" />
-
-              {/* Honeypot for spam (hidden) */}
-              <p className="hidden">
-                <label>
-                  Don’t fill this out: <input name="bot-field" />
-                </label>
-              </p>
-
-              <div className="grid sm:grid-cols-2 gap-4">
-                <input
-                  name="name"
-                  className="w-full border rounded-lg px-3 py-2 text-black"
-                  placeholder="Your name"
-                  required
-                />
-                <input
-                  name="email"
-                  className="w-full border rounded-lg px-3 py-2 text-black"
-                  type="email"
-                  placeholder="Email"
-                  required
-                />
-              </div>
-
-              <textarea
-                name="message"
-                className="w-full border rounded-lg px-3 py-2 text-black"
-                rows={5}
-                placeholder="Tell me about your vision…"
-                required
-              />
-
-              <button
-                className="w-full px-4 py-2 rounded-lg bg-white text-black text-sm hover:bg-gray-200"
-                type="submit"
-              >
-                Send enquiry
-              </button>
-            </form>
-
+            <ContactForm />
             <div className="rounded-2xl border border-gray-700 p-6 bg-black space-y-4 text-sm">
               <div>📍 Paphos, Cyprus</div>
               <div>✉️ info@voithobyrgh.com</div>
@@ -444,14 +395,110 @@ function Home() {
   );
 }
 
+function ContactForm() {
+  // extracted to keep Home lean; uses same handler as above via HTML form submit
+  const encode = (data) => new URLSearchParams(data).toString();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const payload = {
+      "form-name": form.getAttribute("name"),
+      name: form.name.value,
+      email: form.email.value,
+      message: form.message.value,
+    };
+
+    try {
+      const res = await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: encode(payload),
+      });
+      if (res.ok) {
+        form.reset();
+        alert("Thank you! Your enquiry has been sent.");
+      } else {
+        alert("Oops! There was a problem submitting your enquiry.");
+      }
+    } catch (err) {
+      alert("Error: " + err);
+    }
+  };
+
+  return (
+    <form
+      name="enquiry"
+      method="POST"
+      data-netlify="true"
+      netlify-honeypot="bot-field"
+      className="rounded-2xl border border-gray-700 p-6 bg-black space-y-4"
+      onSubmit={handleSubmit}
+    >
+      <input type="hidden" name="form-name" value="enquiry" />
+      <p className="hidden">
+        <label>
+          Don’t fill this out: <input name="bot-field" />
+        </label>
+      </p>
+      <div className="grid sm:grid-cols-2 gap-4">
+        <input
+          name="name"
+          className="w-full border rounded-lg px-3 py-2 text-black"
+          placeholder="Your name"
+          required
+        />
+        <input
+          name="email"
+          className="w-full border rounded-lg px-3 py-2 text-black"
+          type="email"
+          placeholder="Email"
+          required
+        />
+      </div>
+      <textarea
+        name="message"
+        className="w-full border rounded-lg px-3 py-2 text-black"
+        rows={5}
+        placeholder="Tell me about your vision…"
+        required
+      />
+      <button
+        className="w-full px-4 py-2 rounded-lg bg-white text-black text-sm hover:bg-gray-200"
+        type="submit"
+      >
+        Send enquiry
+      </button>
+    </form>
+  );
+}
+
 /* ========== Portfolio Page (/portfolio) ========== */
 function Portfolio() {
+  const projects = [
+    {
+      kind: "video",
+      title: "Pizel DJ — Promo",
+      description:
+        "6:19 Promo featuring Pizel. Perfect for Instagram,TikTok & Reels",
+      embedUrl:
+        "https://player.vimeo.com/video/1123116001?title=0&byline=0&portrait=0&playsinline=1",
+      logo: "/Pizellogo.png", // 👈 put your Pizellogo.png in /public
+    },
+    {
+      kind: "placeholder",
+      title: "More projects coming soon",
+      description:
+        "I’m curating a tight selection of films — check back shortly.",
+    },
+  ];
+
   return (
     <main className="min-h-screen flex flex-col bg-black text-white">
       {/* Header */}
       <header className="bg-white text-black border-b">
         <Section className="flex items-center justify-between py-3">
-          <Link to="/" className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2" aria-label="Go Home">
             <img
               src="/VoithoLOGOv2blk.png"
               alt="Voithó by RGH"
@@ -470,57 +517,61 @@ function Portfolio() {
             >
               Instagram
             </a>
-            <Link
-              to="/#contact"
+            <a
+              href="/#contact"
               className="px-4 py-2 rounded-lg bg-black text-white text-sm hover:bg-gray-800"
             >
               Get a Quote
-            </Link>
+            </a>
           </nav>
         </Section>
       </header>
 
-      {/* Hero with the SAME background as Home */}
-      <section className="relative min-h-screen flex items-center overflow-hidden">
-        {/* Video (bottom layer) */}
-        <div className="absolute inset-0 z-0 overflow-hidden">
-          <iframe
-            title="vimeo-background"
-            src="https://player.vimeo.com/video/1120984476?h=9a5b713a23&background=1&autoplay=1&muted=1&loop=1"
-            frameBorder="0"
-            allow="autoplay; fullscreen"
-            allowFullScreen
-            className="vimeo-cover"
-            style={{ pointerEvents: "none" }}
-          />
-        </div>
+      {/* Portfolio content */}
+      <section className="relative flex-1 flex flex-col py-16">
+        <Section>
+          <Heading eyebrow="Work" title="Portfolio" />
 
-        {/* Light overlay */}
-        <div className="absolute inset-0 z-10 bg-black/30" />
-
-        {/* Content */}
-        <Section className="relative z-20 py-24">
-          <Heading
-            eyebrow="Work"
-            title="Portfolio"
-            subtitle="🚧 This page is under construction. Check back soon for recent projects."
-          />
-          <div className="mx-auto max-w-2xl rounded-2xl border border-gray-800 bg-black/60 backdrop-blur p-8 text-center">
-            <p className="text-gray-200">
-              I’m curating a tight selection of films right now.
-            </p>
-            <p className="text-gray-300 mt-2">
-              In the meantime, see snippets on{" "}
-              <a
-                className="underline"
-                href="https://instagram.com/voithobyrgh"
-                target="_blank"
-                rel="noreferrer"
+          <div className="grid gap-12 sm:grid-cols-1 lg:grid-cols-2 mt-12">
+            {projects.map((p, i) => (
+              <div
+                key={i}
+                className="bg-white/5 border border-gray-800 rounded-2xl overflow-hidden hover:shadow-xl transition p-6 flex flex-col items-center"
               >
-                Instagram
-              </a>
-              .
-            </p>
+                {/* LOGO */}
+                {p.logo && (
+                  <div className="mb-6">
+                    <img
+                      src={p.logo}
+                      alt={`${p.title} logo`}
+                      className="h-20 w-auto mx-auto"
+                    />
+                  </div>
+                )}
+
+                {/* VIDEO */}
+                {p.kind === "video" && (
+                  <div className="relative w-full h-[500px] rounded-lg overflow-hidden mb-6">
+                    <iframe
+                      title={p.title}
+                      src={p.embedUrl}
+                      className="absolute inset-0 w-full h-full"
+                      frameBorder="0"
+                      allow="autoplay; fullscreen; picture-in-picture; clipboard-write"
+                      allowFullScreen
+                    />
+                  </div>
+                )}
+
+                {/* TEXT */}
+                <h3 className="text-2xl font-semibold mb-2 text-center">
+                  {p.title}
+                </h3>
+                {p.description && (
+                  <p className="text-gray-400 text-center">{p.description}</p>
+                )}
+              </div>
+            ))}
           </div>
         </Section>
       </section>
