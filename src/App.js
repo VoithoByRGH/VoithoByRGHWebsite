@@ -1,6 +1,7 @@
 // src/App.js
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 /* ========== Shared UI ========== */
 function Section({ id, children, className = "" }) {
@@ -33,8 +34,7 @@ function Heading({ eyebrow, title, subtitle }) {
 /* ========== Data ========== */
 const NAV = [
   { href: "#services", label: "Services" },
-  { href: "/portfolio", label: "Portfolio", comingSoon: false }, // now LIVE
-  { href: "#packages", label: "Packages" },
+  { href: "/portfolio", label: "Portfolio", comingSoon: false },
   { href: "#faq", label: "FAQ" },
   { href: "#contact", label: "Contact" },
 ];
@@ -85,42 +85,6 @@ const SERVICES = [
   },
 ];
 
-const PACKAGES = [
-  {
-    name: "Real Estate Showcase",
-    price: "€250 flat",
-    points: ["1–2 min property film", "3–5 aerials included (if permitted)"],
-    note: "Perfect for listings, Airbnbs and developer reveals.",
-  },
-  {
-    name: "Local Business Promo",
-    price: "€150–180",
-    points: ["30–60s edit", "9:16 + 16:9 deliverables", "1x revision"],
-    note: "Designed to perform on Instagram & TikTok.",
-  },
-  {
-    name: "Construction Progress",
-    price: "from €100 / month",
-    points: [
-      "5–10 consistent angles",
-      "Optional 15–30s monthly edit",
-      "Shareable update link",
-      "Quarterly recap",
-    ],
-    note: "Keep stakeholders aligned with zero friction.",
-  },
-  {
-    name: "Custom Projects",
-    price: "Email for quote",
-    points: [
-      "Tailored to your vision",
-      "Flexible scope and style",
-      "Available for brands, events & more",
-    ],
-    note: "Get in touch with your ideas and we’ll create a package that fits.",
-  },
-];
-
 const FAQ = [
   {
     q: "Where are you based?",
@@ -141,42 +105,32 @@ const FAQ = [
 
 /* ========== Home Page ========== */
 function Home() {
-  // --- Netlify AJAX helpers ---
-  const encode = (data) => new URLSearchParams(data).toString();
+  const [scrolled, setScrolled] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const payload = {
-      "form-name": form.getAttribute("name"),
-      name: form.name.value,
-      email: form.email.value,
-      message: form.message.value,
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 40);
     };
-
-    try {
-      const res = await fetch("/", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: encode(payload),
-      });
-      if (res.ok) {
-        form.reset();
-        alert("Thank you! Your enquiry has been sent.");
-      } else {
-        alert("Oops! There was a problem submitting your enquiry.");
-      }
-    } catch (err) {
-      alert("Error: " + err);
-    }
-  };
-  // ----------------------------
+    handleScroll();
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <div className="min-h-screen bg-black text-white">
       {/* NAVBAR */}
-      <header className="sticky top-0 z-30 bg-white text-black backdrop-blur border-b">
-        <Section className="flex items-center justify-between py-3">
+      <header
+        className={`sticky top-0 z-30 border-b transition-all duration-300 ${
+          scrolled
+            ? "bg-white/95 text-black shadow-[0_6px_20px_rgba(0,0,0,0.10)] backdrop-blur"
+            : "bg-white text-black"
+        }`}
+      >
+        <Section
+          className={`flex items-center justify-between transition-all duration-300 ${
+            scrolled ? "py-2" : "py-3"
+          }`}
+        >
           <a href="#top" className="flex items-center gap-2">
             <img
               src="/VoithoLOGOv2blk.png"
@@ -210,7 +164,7 @@ function Home() {
               href="#contact"
               className="px-4 py-2 rounded-lg bg-black text-white text-sm hover:bg-gray-800"
             >
-              Get a Quote
+              Check availability
             </a>
           </nav>
         </Section>
@@ -234,43 +188,83 @@ function Home() {
           />
         </div>
 
-        {/* Light overlay */}
-        <div className="absolute inset-0 z-10 bg-black/30" />
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 z-10 bg-gradient-to-r from-black/70 via-black/45 to-black/10" />
 
         {/* Content */}
         <Section className="relative z-20 py-16 sm:py-24 !max-w-none !mx-0">
-          <div className="max-w-3xl text-center sm:text-left px-6 sm:pl-12 mt-10 sm:mt-20">
-            <h1 className="font-display text-4xl sm:text-6xl leading-[1.1]">
+          <motion.div
+            className="max-w-3xl text-center sm:text-left px-6 sm:pl-12 mt-10 sm:mt-20"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          >
+            <h1 className="font-display text-3xl sm:text-5xl lg:text-6xl leading-[1.1]">
               Cinematic films for brands & beautiful spaces.
             </h1>
             <p className="mt-6 text-base sm:text-lg text-white/85">
               Calm presence. Clean sound. Elegant color. Deliverables that
               perform on social.
             </p>
-            <div className="mt-10 flex flex-wrap justify-center sm:justify-start gap-3">
+            <motion.div
+              className="mt-10 flex flex-wrap justify-center sm:justify-start gap-3"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, ease: "easeOut", delay: 0.2 }}
+            >
               <a
                 href="#contact"
                 className="px-5 py-3 rounded-full bg-white text-black text-sm hover:bg-gray-200 transition"
               >
                 Check availability
               </a>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </Section>
       </section>
 
       {/* SERVICES */}
       <Section id="services" className="py-16">
         <h2 className="sr-only">Cyprus Videographer Services</h2>
-        <Heading
-          eyebrow="What I Do"
-          title="Full-service freelance videography"
-          subtitle="From dynamic brand stories to property showcases — tailored films with a calm, professional touch."
-        />
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        {/* Animated heading */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
+          <Heading
+            eyebrow="What I Do"
+            title="Full-service freelance videography"
+            subtitle="From dynamic brand stories to property showcases — tailored films with a calm, professional touch."
+          />
+        </motion.div>
+
+        {/* Animated cards with stagger */}
+        <motion.div
+          className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          variants={{
+            hidden: {},
+            visible: {
+              transition: {
+                staggerChildren: 0.12,
+              },
+            },
+          }}
+        >
           {SERVICES.map((s, i) => (
-            <div
+            <motion.div
               key={i}
+              variants={{
+                hidden: { opacity: 0, y: 40 },
+                visible: { opacity: 1, y: 0 },
+              }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+              whileHover={{ y: -4, scale: 1.02 }}
               className="rounded-2xl border border-gray-800 p-5 hover:shadow-sm transition"
             >
               <div className="flex items-center gap-3 mb-3">
@@ -288,68 +282,137 @@ function Home() {
                   </li>
                 ))}
               </ul>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </Section>
-
-      {/* PACKAGES */}
-      <div className="bg-gray-100 border-y border-gray-800 text-black">
-        <Section id="packages" className="py-16">
-          <Heading
-            eyebrow="Rates"
-            title="Simple, transparent packages"
-            subtitle="Every project is scoped clearly with deliverables, timelines, and licensing."
-          />
-          <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-6">
-            {PACKAGES.map((pkg, i) => (
-              <div
-                key={i}
-                className="rounded-2xl border border-gray-300 p-5 bg-white text-black"
-              >
-                <div className="text-xl font-semibold">{pkg.name}</div>
-                <div className="font-semibold mt-1">{pkg.price}</div>
-                <ul className="space-y-2 text-sm my-4">
-                  {pkg.points.map((pt, j) => (
-                    <li key={j} className="flex items-start gap-2">
-                      {pt}
-                    </li>
-                  ))}
-                </ul>
-                <p className="text-xs text-gray-600">{pkg.note}</p>
-              </div>
-            ))}
-          </div>
-        </Section>
-      </div>
 
       {/* FAQ */}
       <Section id="faq" className="py-16">
-        <Heading eyebrow="Good to know" title="FAQs" />
-        <div className="grid md:grid-cols-2 gap-6">
+        {/* Animated heading */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
+          <Heading eyebrow="Good to know" title="FAQs" />
+        </motion.div>
+
+        {/* Animated FAQ cards with stagger */}
+        <motion.div
+          className="grid md:grid-cols-2 gap-6 mt-6"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          variants={{
+            hidden: {},
+            visible: {
+              transition: {
+                staggerChildren: 0.1,
+              },
+            },
+          }}
+        >
           {FAQ.map((f, i) => (
-            <div
+            <motion.div
               key={i}
+              variants={{
+                hidden: { opacity: 0, y: 30 },
+                visible: { opacity: 1, y: 0 },
+              }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+              whileHover={{ y: -3, scale: 1.01 }}
               className="rounded-2xl border border-gray-800 p-5 bg-black"
             >
               <h3 className="font-medium">{f.q}</h3>
               <p className="text-sm text-gray-300 mt-2">{f.a}</p>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </Section>
 
       {/* CONTACT */}
-      <div className="bg-black-900 border-y border-gray-800">
+      <div className="bg-white text-black border-y border-gray-200">
         <Section id="contact" className="py-16">
-          <Heading
-            eyebrow="Let’s talk"
-            title="Check my availability"
-            subtitle="Tell me a little about your project and preferred date(s). I’ll reply with a tailored quote."
-          />
-          <div className="grid lg:grid-cols-2 gap-6">
-            <ContactForm />
-            <div className="rounded-2xl border border-gray-700 p-6 bg-black space-y-4 text-sm">
+          {/* Animated heading */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
+            <Heading
+              eyebrow="Let’s talk"
+              title="Check availability"
+              subtitle="Tell me a little about your project and preferred date(s). I’ll reply with a tailored quote."
+            />
+          </motion.div>
+
+          {/* Grid with staggered children */}
+          <motion.div
+            className="grid lg:grid-cols-2 gap-6 mt-6"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
+            variants={{
+              hidden: {},
+              visible: {
+                transition: {
+                  staggerChildren: 0.15,
+                },
+              },
+            }}
+          >
+            {/* FORM card */}
+            <motion.div
+              variants={{
+                hidden: { opacity: 0, y: 30 },
+                visible: { opacity: 1, y: 0 },
+              }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+              whileHover={{
+                y: -4,
+                scale: 1.01,
+                boxShadow: "0 0 28px rgba(0,0,0,0.3)",
+              }}
+              className="
+                rounded-2xl
+                border border-gray-700
+                bg-black
+                text-white
+                shadow-[0_8px_30px_rgba(0,0,0,0.12)]
+                ring-1 ring-black/20
+                p-6
+              "
+            >
+              <ContactForm />
+            </motion.div>
+
+            {/* INFO card */}
+            <motion.div
+              variants={{
+                hidden: { opacity: 0, y: 30 },
+                visible: { opacity: 1, y: 0 },
+              }}
+              transition={{ duration: 0.5, ease: "easeOut", delay: 0.05 }}
+              whileHover={{
+                y: -3,
+                scale: 1.01,
+                boxShadow: "0 0 24px rgba(0,0,0,0.28)",
+              }}
+              className="
+                rounded-2xl
+                border border-gray-700
+                bg-black
+                text-white
+                shadow-[0_8px_30px_rgba(0,0,0,0.12)]
+                ring-1 ring-black/20
+                p-6
+                space-y-4
+                text-sm
+              "
+            >
               <div>📍 Paphos, Cyprus</div>
               <div>✉️ info@voithobyrgh.com</div>
               <a
@@ -360,13 +423,13 @@ function Home() {
               >
                 Instagram
               </a>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </Section>
       </div>
 
       {/* FOOTER */}
-      <footer className="py-10">
+      <footer className="py-10 bg-gradient-to-t from-black via-black to-black/90">
         <Section className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm">
           <div className="flex items-center gap-3">
             <img
@@ -382,9 +445,6 @@ function Home() {
             <a href="#services" className="hover:underline">
               Services
             </a>
-            <a href="#packages" className="hover:underline">
-              Packages
-            </a>
             <a href="#contact" className="hover:underline">
               Contact
             </a>
@@ -395,8 +455,8 @@ function Home() {
   );
 }
 
+/* ========== Contact Form ========== */
 function ContactForm() {
-  // extracted to keep Home lean; uses same handler as above via HTML form submit
   const encode = (data) => new URLSearchParams(data).toString();
 
   const handleSubmit = async (e) => {
@@ -432,7 +492,7 @@ function ContactForm() {
       method="POST"
       data-netlify="true"
       netlify-honeypot="bot-field"
-      className="rounded-2xl border border-gray-700 p-6 bg-black space-y-4"
+      className="space-y-4"
       onSubmit={handleSubmit}
     >
       <input type="hidden" name="form-name" value="enquiry" />
@@ -483,7 +543,7 @@ function Portfolio() {
         "6:19 Promo featuring Pizel. Perfect for Instagram,TikTok & Reels",
       embedUrl:
         "https://player.vimeo.com/video/1123116001?title=0&byline=0&portrait=0&playsinline=1",
-      logo: "/Pizellogo.png", // 👈 put your Pizellogo.png in /public
+      logo: "/Pizellogo.png",
     },
     {
       kind: "placeholder",
@@ -521,7 +581,7 @@ function Portfolio() {
               href="/#contact"
               className="px-4 py-2 rounded-lg bg-black text-white text-sm hover:bg-gray-800"
             >
-              Get a Quote
+              Check availability
             </a>
           </nav>
         </Section>
@@ -530,12 +590,38 @@ function Portfolio() {
       {/* Portfolio content */}
       <section className="relative flex-1 flex flex-col py-16">
         <Section>
-          <Heading eyebrow="Work" title="Portfolio" />
+          {/* Animated heading */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.4 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
+            <Heading eyebrow="Work" title="Portfolio" />
+          </motion.div>
 
-          <div className="grid gap-12 sm:grid-cols-1 lg:grid-cols-2 mt-12">
+          {/* Animated grid */}
+          <motion.div
+            className="grid gap-12 sm:grid-cols-1 lg:grid-cols-2 mt-12"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            variants={{
+              hidden: {},
+              visible: {
+                transition: { staggerChildren: 0.15 },
+              },
+            }}
+          >
             {projects.map((p, i) => (
-              <div
+              <motion.div
                 key={i}
+                variants={{
+                  hidden: { opacity: 0, y: 40 },
+                  visible: { opacity: 1, y: 0 },
+                }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+                whileHover={{ y: -3, scale: 1.005 }}
                 className="bg-white/5 border border-gray-800 rounded-2xl overflow-hidden hover:shadow-xl transition p-6 flex flex-col items-center"
               >
                 {/* LOGO */}
@@ -570,14 +656,14 @@ function Portfolio() {
                 {p.description && (
                   <p className="text-gray-400 text-center">{p.description}</p>
                 )}
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </Section>
       </section>
 
       {/* Footer */}
-      <footer className="py-10">
+      <footer className="py-10 bg-gradient-to-t from-black via-black to-black/90">
         <Section className="flex items-center justify-between gap-4 text-sm">
           <div className="flex items-center gap-3">
             <img
