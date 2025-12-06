@@ -106,6 +106,7 @@ const FAQ = [
 /* ========== Home Page ========== */
 function Home() {
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -115,6 +116,8 @@ function Home() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const closeMenu = () => setMenuOpen(false);
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -131,13 +134,20 @@ function Home() {
             scrolled ? "py-2" : "py-3"
           }`}
         >
-          <a href="#top" className="flex items-center gap-2">
+          {/* Logo */}
+          <a
+            href="#top"
+            className="flex items-center gap-2"
+            onClick={closeMenu}
+          >
             <img
               src="/VoithoLOGOv2blk.png"
               alt="Voithó by RGH"
               className="h-45 w-40"
             />
           </a>
+
+          {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-6">
             {NAV.map((item) => {
               const isRoute = item.href.startsWith("/");
@@ -167,7 +177,72 @@ function Home() {
               Check availability
             </a>
           </nav>
+
+          {/* Mobile hamburger */}
+          <button
+            type="button"
+            className="md:hidden flex flex-col justify-between w-7 h-5"
+            onClick={() => setMenuOpen((v) => !v)}
+            aria-label="Toggle navigation"
+          >
+            <span
+              className={`h-[2px] w-full bg-black rounded transition-transform ${
+                menuOpen ? "translate-y-[7px] rotate-45" : ""
+              }`}
+            />
+            <span
+              className={`h-[2px] w-full bg-black rounded transition-opacity ${
+                menuOpen ? "opacity-0" : "opacity-100"
+              }`}
+            />
+            <span
+              className={`h-[2px] w-full bg-black rounded transition-transform ${
+                menuOpen ? "-translate-y-[7px] -rotate-45" : ""
+              }`}
+            />
+          </button>
         </Section>
+
+        {/* Mobile dropdown */}
+        <div
+          className={`
+            md:hidden overflow-hidden border-t border-black/10 bg-white/95
+            transition-all duration-300
+            ${menuOpen ? "max-h-80 opacity-100" : "max-h-0 opacity-0"}
+          `}
+        >
+          <div className="px-4 pt-3 pb-4 flex flex-col gap-3 text-sm">
+            {NAV.map((item) => {
+              const isRoute = item.href.startsWith("/");
+              return isRoute ? (
+                <Link
+                  key={item.href}
+                  to={item.href}
+                  onClick={closeMenu}
+                  className="py-1"
+                >
+                  {item.label}
+                </Link>
+              ) : (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  onClick={closeMenu}
+                  className="py-1"
+                >
+                  {item.label}
+                </a>
+              );
+            })}
+            <a
+              href="#contact"
+              onClick={closeMenu}
+              className="mt-2 inline-flex justify-center px-4 py-2 rounded-full border border-black/30 text-sm"
+            >
+              Check availability
+            </a>
+          </div>
+        </div>
       </header>
 
       {/* HERO */}
