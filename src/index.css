@@ -23,3 +23,23 @@
 html {
   scroll-behavior: smooth;
 }
+/* ─────────────────────────────────────────────
+   Luxury Christmas Snow Overlay
+   Subtle. Sparse. Non-interactive.
+   ───────────────────────────────────────────── */
+
+   @keyframes snow-fall {
+    from { transform: translateY(-10vh); }
+    to   { transform: translateY(110vh); }
+  }
+  
+  @keyframes snow-sway {
+    from { transform: translateX(-6px); }
+    to   { transform: translateX(6px); }
+  }
+  
+  @keyframes snow-spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+  

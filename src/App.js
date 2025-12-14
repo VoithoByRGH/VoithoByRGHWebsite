@@ -10,7 +10,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 import { motion } from "framer-motion";
-
+import SnowOverlay from "./components/SnowOverlay";
 import Photography from "./pages/Photography";
 
 /* ========== Shared UI ========== */
@@ -171,6 +171,7 @@ function Layout({ children }) {
 
   return (
     <div className="min-h-screen bg-black text-white">
+      <SnowOverlay enabled count={28} />
       <header
         className={`sticky top-0 z-30 border-b transition-all duration-300 ${
           scrolled
