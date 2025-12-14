@@ -72,20 +72,52 @@ const PHOTO_SECTIONS = [
   {
     id: "people",
     title: "People",
-    subtitle: "Character-led portraits and natural moments.",
+    subtitle:
+      "Portraits that feel cinematic, natural, and considered — never stiff or overworked.",
+    description:
+      "For founders, creatives, and couples who want to look confident without looking posed. I direct just enough to keep everything clean and intentional, then let real moments do the work. The focus is expression, posture, and light — so the result feels effortless, not engineered.",
+    bullets: [
+      "Subtle direction that removes awkwardness fast",
+      "Clean, flattering light with an editorial finish",
+      "Personal branding, lifestyle, events, and couples",
+      "Curated delivery — quality over quantity",
+    ],
+    deliverables:
+      "A refined set ready for websites, press, social media, and print — built to elevate how you’re perceived.",
     images: PEOPLE_IMAGES,
   },
   {
     id: "spaces",
     title: "Spaces",
-    subtitle: "Light, structure, and atmosphere.",
+    subtitle:
+      "Architecture and interiors photographed to communicate atmosphere and value.",
+    description:
+      "For venues, hospitality, and property brands that need images that feel calm, premium, and intentional. I focus on how light shapes the space, how materials read on camera, and how composition communicates scale — with clean lines and minimal distortion.",
+    bullets: [
+      "Straight verticals and balanced compositions",
+      "Detail frames that sell texture and finish",
+      "Consistent colour and tone across the full set",
+      "Built for websites, listings, brochures, and press",
+    ],
+    deliverables:
+      "A cohesive gallery that makes the space feel worth the price before anyone steps inside.",
     images: SPACES_IMAGES,
   },
   {
     id: "objects",
     title: "Objects",
     subtitle:
-      "Designed forms — including automotive — photographed with intent.",
+      "Product and automotive photography built around form, material, and desire.",
+    description:
+      "For brands, makers, and collectors who care about perception. This is controlled, detail-driven photography — shaping reflections, isolating form, and highlighting finish so quality is immediately understood. Especially suited to automotive details and crafted products.",
+    bullets: [
+      "Controlled highlights and clean reflections",
+      "Detail-led frames that signal craftsmanship",
+      "Consistent angles for collections and campaigns",
+      "Ideal for product launches and premium brands",
+    ],
+    deliverables:
+      "Images that make the object feel premium and remove hesitation from the buyer.",
     images: OBJECTS_IMAGES,
   },
 ];
@@ -440,13 +472,41 @@ export default function Photography() {
               transition={{ duration: 0.6, ease: "easeOut" }}
             >
               <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-8">
+                {/* Copy block */}
                 <div className="max-w-2xl">
                   <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
                     {sec.title}
                   </h2>
-                  <p className="text-gray-400 mt-2">{sec.subtitle}</p>
+                  <p className="text-gray-300 mt-2">{sec.subtitle}</p>
+
+                  {sec.description && (
+                    <p className="text-gray-400 mt-4 leading-relaxed">
+                      {sec.description}
+                    </p>
+                  )}
+
+                  {sec.bullets?.length ? (
+                    <ul className="mt-4 space-y-2 text-sm text-gray-300">
+                      {sec.bullets.map((b, idx) => (
+                        <li key={idx} className="flex gap-2">
+                          <span className="mt-1 h-1.5 w-1.5 rounded-full bg-white/60 shrink-0" />
+                          <span className="text-gray-300">{b}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
+
+                  {sec.deliverables && (
+                    <p className="text-gray-400 mt-4 text-sm">
+                      <span className="text-gray-200 font-medium">
+                        Outcome:
+                      </span>{" "}
+                      {sec.deliverables}
+                    </p>
+                  )}
                 </div>
 
+                {/* CTA */}
                 <div className="flex gap-2">
                   <a
                     href="/#contact"
@@ -454,12 +514,12 @@ export default function Photography() {
                   >
                     Enquire
                   </a>
-                  <Link
-                    to="/portfolio"
-                    className="px-4 py-2 rounded-full border border-gray-700 text-sm text-gray-200 hover:bg-white/10 transition"
+                  <a
+                    href="/#contact"
+                    className="px-4 py-2 rounded-full bg-white text-black text-sm hover:bg-gray-200 transition"
                   >
-                    Portfolio
-                  </Link>
+                    Get a quote
+                  </a>
                 </div>
               </div>
 
@@ -511,6 +571,16 @@ export default function Photography() {
                       />
                     ))}
               </motion.div>
+
+              {/* Optional: small bottom link */}
+              <div className="mt-6 flex items-center justify-between gap-3 text-xs text-white/50">
+                <span>
+                  Need something specific? Tell me what you’re building.
+                </span>
+                <Link to="/portfolio" className="hover:text-white transition">
+                  View full portfolio →
+                </Link>
+              </div>
             </motion.section>
           ))}
         </motion.div>
