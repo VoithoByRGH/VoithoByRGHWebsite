@@ -48,7 +48,9 @@ function Heading({ eyebrow, title, subtitle }) {
       <h1 className="text-3xl sm:text-5xl font-semibold tracking-tight">
         {title}
       </h1>
-      {subtitle && <p className="text-gray-300 mt-4">{subtitle}</p>}
+      {subtitle && (
+        <p className="text-gray-300 mt-4 leading-relaxed">{subtitle}</p>
+      )}
     </div>
   );
 }
@@ -181,7 +183,7 @@ function PlaceholderCard({ label }) {
       <div className="absolute bottom-3 left-3 right-3">
         <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/35 px-3 py-1 text-[11px] text-white/80 backdrop-blur">
           <span className="h-1.5 w-1.5 rounded-full bg-white/60" />
-          {label}
+          <span className="truncate">{label}</span>
         </div>
       </div>
     </motion.div>
@@ -198,7 +200,7 @@ function PhotoCard({ src, onOpen }) {
       transition={{ duration: 0.45, ease: "easeOut" }}
       whileHover={{ y: -3, scale: 1.01 }}
       onClick={onOpen}
-      className="group relative overflow-hidden rounded-2xl border border-gray-800 bg-white/5 text-left"
+      className="group relative overflow-hidden rounded-2xl border border-gray-800 bg-white/5 text-left w-full"
       aria-label="Open image"
     >
       <div className="aspect-[4/5] w-full overflow-hidden">
@@ -206,7 +208,7 @@ function PhotoCard({ src, onOpen }) {
           src={src}
           alt=""
           loading="lazy"
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.05]"
+          className="block h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.05]"
         />
       </div>
 
@@ -326,7 +328,7 @@ function Lightbox({ isOpen, images, index, onClose, onPrev, onNext }) {
                 <img
                   src={current.src}
                   alt=""
-                  className="w-full h-auto max-h-[85vh] object-contain select-none"
+                  className="block w-full h-auto max-h-[85vh] object-contain select-none"
                   draggable="false"
                 />
               </motion.div>
@@ -401,7 +403,7 @@ export default function Photography() {
   };
 
   return (
-    <main className="min-h-screen bg-black text-white">
+    <main className="min-h-screen bg-black text-white overflow-x-hidden">
       <Lightbox
         isOpen={lightboxOpen}
         images={lightboxImages}
@@ -471,13 +473,16 @@ export default function Photography() {
               variants={fadeUp}
               transition={{ duration: 0.6, ease: "easeOut" }}
             >
+              {/* Header row (mobile stacks by default) */}
               <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-8">
-                {/* Copy block */}
-                <div className="max-w-2xl">
+                <div className="max-w-2xl min-w-0">
                   <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
                     {sec.title}
                   </h2>
-                  <p className="text-gray-300 mt-2">{sec.subtitle}</p>
+
+                  <p className="text-gray-300 mt-2 leading-relaxed">
+                    {sec.subtitle}
+                  </p>
 
                   {sec.description && (
                     <p className="text-gray-400 mt-4 leading-relaxed">
@@ -490,14 +495,16 @@ export default function Photography() {
                       {sec.bullets.map((b, idx) => (
                         <li key={idx} className="flex gap-2">
                           <span className="mt-1 h-1.5 w-1.5 rounded-full bg-white/60 shrink-0" />
-                          <span className="text-gray-300">{b}</span>
+                          <span className="text-gray-300 leading-relaxed">
+                            {b}
+                          </span>
                         </li>
                       ))}
                     </ul>
                   ) : null}
 
                   {sec.deliverables && (
-                    <p className="text-gray-400 mt-4 text-sm">
+                    <p className="text-gray-400 mt-4 text-sm leading-relaxed">
                       <span className="text-gray-200 font-medium">
                         Outcome:
                       </span>{" "}
@@ -506,8 +513,8 @@ export default function Photography() {
                   )}
                 </div>
 
-                {/* CTA */}
-                <div className="flex gap-2">
+                {/* CTA (wrap on mobile; align right on desktop) */}
+                <div className="flex flex-wrap gap-2 sm:justify-end">
                   <a
                     href="/#contact"
                     className="px-4 py-2 rounded-full border border-gray-700 text-sm text-gray-200 hover:bg-white/10 transition"
@@ -525,7 +532,7 @@ export default function Photography() {
 
               {/* Objects toggle */}
               {sec.id === "objects" && (
-                <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+                <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                   <div className="text-sm text-gray-400">
                     Showing{" "}
                     <span className="text-gray-200 font-medium">
@@ -542,13 +549,14 @@ export default function Photography() {
                   <button
                     type="button"
                     onClick={() => setShowAllObjects((v) => !v)}
-                    className="px-4 py-2 rounded-full border border-gray-700 text-sm text-gray-200 hover:bg-white/10 transition"
+                    className="px-4 py-2 rounded-full border border-gray-700 text-sm text-gray-200 hover:bg-white/10 transition w-fit"
                   >
                     {showAllObjects ? "Show less" : "View full set"}
                   </button>
                 </div>
               )}
 
+              {/* Grid */}
               <motion.div
                 className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
                 variants={gridStagger}
@@ -572,12 +580,15 @@ export default function Photography() {
                     ))}
               </motion.div>
 
-              {/* Optional: small bottom link */}
-              <div className="mt-6 flex items-center justify-between gap-3 text-xs text-white/50">
-                <span>
+              {/* Bottom helper row (stack on mobile to prevent overflow) */}
+              <div className="mt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-xs text-white/50">
+                <span className="leading-relaxed">
                   Need something specific? Tell me what you’re building.
                 </span>
-                <Link to="/portfolio" className="hover:text-white transition">
+                <Link
+                  to="/portfolio"
+                  className="hover:text-white transition self-start sm:self-auto whitespace-nowrap"
+                >
                   View full portfolio →
                 </Link>
               </div>
@@ -599,7 +610,7 @@ export default function Photography() {
             <h3 className="text-2xl sm:text-3xl font-semibold tracking-tight">
               Ready to shoot something intentional?
             </h3>
-            <p className="text-gray-300 mt-3 max-w-2xl mx-auto">
+            <p className="text-gray-300 mt-3 max-w-2xl mx-auto leading-relaxed">
               Tell me what you’re building and what you want it to feel like.
               I’ll reply with a tight plan and a quote.
             </p>
