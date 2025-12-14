@@ -4,20 +4,13 @@ import { Link } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 
 /* ========== Auto-import Objects (CRA / react-scripts) ========== */
-/**
- * Put files here:
- *   src/assets/objects/ROB05814.jpg
- *   src/assets/objects/...
- *
- * NOTE: Works in CRA because Webpack supports require.context.
- */
 function importAll(ctx) {
   return ctx
     .keys()
     .sort()
     .map((k) => {
       const mod = ctx(k);
-      return mod?.default ?? mod; // support both module formats
+      return mod?.default ?? mod;
     });
 }
 
@@ -25,7 +18,7 @@ const OBJECTS_IMAGES = importAll(
   require.context("../assets/objects", false, /\.(jpe?g|png|webp)$/)
 );
 
-/* ========== Local Shared UI (standalone) ========== */
+/* ========== Local Shared UI ========== */
 function Section({ id, children, className = "" }) {
   return (
     <section
@@ -126,7 +119,7 @@ const PHOTO_SECTIONS = [
 
 /* ========== Motion Variants ========== */
 const fadeUp = {
-  hidden: { opacity: 0, y: 24 },
+  hidden: { opacity: 0, y: 20 },
   show: { opacity: 1, y: 0 },
 };
 
@@ -162,10 +155,6 @@ function PlaceholderCard({ label }) {
   return (
     <motion.div
       variants={cardItem}
-      initial="hidden"
-      animate="show"
-      transition={{ duration: 0.45, ease: "easeOut" }}
-      whileHover={{ y: -3, scale: 1.01 }}
       className="group relative overflow-hidden rounded-2xl border border-gray-800 bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950"
     >
       <div className="aspect-[4/5] w-full" />
@@ -195,9 +184,6 @@ function PhotoCard({ src, onOpen }) {
     <motion.button
       type="button"
       variants={cardItem}
-      initial="hidden"
-      animate="show"
-      transition={{ duration: 0.45, ease: "easeOut" }}
       whileHover={{ y: -3, scale: 1.01 }}
       onClick={onOpen}
       className="group relative overflow-hidden rounded-2xl border border-gray-800 bg-white/5 text-left w-full"
@@ -222,7 +208,7 @@ function PhotoCard({ src, onOpen }) {
   );
 }
 
-/* ========== Lightbox (swipe + keyboard) ========== */
+/* ========== Lightbox ========== */
 function Lightbox({ isOpen, images, index, onClose, onPrev, onNext }) {
   useEffect(() => {
     if (!isOpen) return;
@@ -257,7 +243,6 @@ function Lightbox({ isOpen, images, index, onClose, onPrev, onNext }) {
           role="dialog"
           aria-modal="true"
         >
-          {/* Backdrop */}
           <motion.button
             type="button"
             className="absolute inset-0 bg-black/80 backdrop-blur-sm"
@@ -268,7 +253,6 @@ function Lightbox({ isOpen, images, index, onClose, onPrev, onNext }) {
             exit={{ opacity: 0 }}
           />
 
-          {/* Close */}
           <div className="absolute top-4 right-4 z-20 flex gap-2">
             <button
               type="button"
@@ -280,7 +264,6 @@ function Lightbox({ isOpen, images, index, onClose, onPrev, onNext }) {
             </button>
           </div>
 
-          {/* Left/Right (desktop) */}
           <div className="hidden sm:flex absolute left-4 z-20">
             <button
               type="button"
@@ -302,7 +285,6 @@ function Lightbox({ isOpen, images, index, onClose, onPrev, onNext }) {
             </button>
           </div>
 
-          {/* Image */}
           <motion.div
             className="relative z-10 w-full max-w-6xl"
             variants={modalMotion}
@@ -351,10 +333,8 @@ export default function Photography() {
   const visibleSections = useMemo(() => {
     return PHOTO_SECTIONS.map((sec) => {
       if (sec.id !== "objects") return sec;
-
       const limit = 16;
       const visible = showAllObjects ? sec.images : sec.images.slice(0, limit);
-
       return { ...sec, images: visible };
     });
   }, [showAllObjects]);
@@ -457,12 +437,11 @@ export default function Photography() {
         </Section>
       </section>
 
-      {/* SECTIONS */}
+      {/* SECTIONS (animate on mount — no iOS “in view” bugs) */}
       <Section className="py-10 sm:py-14">
         <motion.div
           initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.2 }}
+          animate="show"
           variants={sectionStagger}
           className="space-y-20 sm:space-y-28"
         >
@@ -473,7 +452,6 @@ export default function Photography() {
               variants={fadeUp}
               transition={{ duration: 0.6, ease: "easeOut" }}
             >
-              {/* Header row (mobile stacks by default) */}
               <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-8">
                 <div className="max-w-2xl min-w-0">
                   <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
@@ -513,7 +491,6 @@ export default function Photography() {
                   )}
                 </div>
 
-                {/* CTA (wrap on mobile; align right on desktop) */}
                 <div className="flex flex-wrap gap-2 sm:justify-end">
                   <a
                     href="/#contact"
@@ -530,7 +507,6 @@ export default function Photography() {
                 </div>
               </div>
 
-              {/* Objects toggle */}
               {sec.id === "objects" && (
                 <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                   <div className="text-sm text-gray-400">
@@ -556,13 +532,9 @@ export default function Photography() {
                 </div>
               )}
 
-              {/* Grid */}
               <motion.div
                 className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
                 variants={gridStagger}
-                initial="hidden"
-                whileInView="show"
-                viewport={{ once: true, amount: 0.15 }}
               >
                 {sec.images?.length
                   ? sec.images.map((src, i) => (
@@ -580,7 +552,6 @@ export default function Photography() {
                     ))}
               </motion.div>
 
-              {/* Bottom helper row (stack on mobile to prevent overflow) */}
               <div className="mt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-xs text-white/50">
                 <span className="leading-relaxed">
                   Need something specific? Tell me what you’re building.
@@ -602,8 +573,7 @@ export default function Photography() {
         <Section className="py-14 sm:py-16">
           <motion.div
             initial={{ opacity: 0, y: 26 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.35 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
             className="rounded-3xl border border-gray-800 bg-black p-8 sm:p-10 text-center"
           >
