@@ -34,13 +34,16 @@ function Heading({ eyebrow, title, subtitle }) {
   return (
     <div className="text-center max-w-3xl mx-auto">
       {eyebrow && (
-        <div className="mb-2 inline-block text-xs font-semibold tracking-wide bg-gray-100 border rounded-full px-3 py-1 text-black">
+        <div className="mb-3 inline-block text-xs font-semibold tracking-wide bg-gray-100 border rounded-full px-3 py-1 text-black">
           {eyebrow}
         </div>
       )}
-      <h1 className="text-3xl sm:text-5xl font-semibold tracking-tight">
+
+      {/* Display font belongs here */}
+      <h1 className="font-display text-3xl sm:text-5xl lg:text-6xl tracking-tight leading-[1.05]">
         {title}
       </h1>
+
       {subtitle && (
         <p className="text-gray-300 mt-4 leading-relaxed">{subtitle}</p>
       )}
@@ -437,7 +440,7 @@ export default function Photography() {
         </Section>
       </section>
 
-      {/* SECTIONS (animate on mount — no iOS “in view” bugs) */}
+      {/* SECTIONS */}
       <Section className="py-10 sm:py-14">
         <motion.div
           initial="hidden"
@@ -454,7 +457,8 @@ export default function Photography() {
             >
               <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-8">
                 <div className="max-w-2xl min-w-0">
-                  <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+                  {/* Display font belongs here too */}
+                  <h2 className="font-display text-3xl sm:text-4xl tracking-tight leading-[1.05]">
                     {sec.title}
                   </h2>
 
@@ -577,9 +581,11 @@ export default function Photography() {
             transition={{ duration: 0.6, ease: "easeOut" }}
             className="rounded-3xl border border-gray-800 bg-black p-8 sm:p-10 text-center"
           >
-            <h3 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+            {/* Display font belongs here */}
+            <h3 className="font-display text-3xl sm:text-4xl tracking-tight leading-[1.05]">
               Ready to shoot something intentional?
             </h3>
+
             <p className="text-gray-300 mt-3 max-w-2xl mx-auto leading-relaxed">
               Tell me what you’re building and what you want it to feel like.
               I’ll reply with a tight plan and a quote.

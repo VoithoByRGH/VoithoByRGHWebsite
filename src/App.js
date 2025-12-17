@@ -25,21 +25,40 @@ function Section({ id, children, className = "" }) {
   );
 }
 
-function Heading({ eyebrow, title, subtitle }) {
+/**
+ * Typography rules:
+ * - font-display (Cormorant Garamond): hero + section titles + featured titles
+ * - font-sans (Inter): everything else (readability)
+ */
+function Heading({ eyebrow, title, subtitle, align = "center" }) {
+  const alignment =
+    align === "left" ? "text-left items-start" : "text-center items-center";
+
   return (
-    <div className="text-center max-w-3xl mx-auto mb-10">
-      {eyebrow && (
-        <div className="mb-2 inline-block text-xs font-semibold tracking-wide bg-gray-100 border rounded-full px-3 py-1 text-black">
+    <div className={`max-w-3xl mx-auto mb-10 flex flex-col ${alignment}`}>
+      {eyebrow ? (
+        <div className="mb-3 inline-flex items-center rounded-full border border-black/10 bg-white/90 px-3 py-1 text-[11px] font-semibold tracking-wide text-black">
           {eyebrow}
         </div>
-      )}
-      <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight">
+      ) : null}
+
+      <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl tracking-tight leading-[1.05]">
         {title}
       </h2>
-      {subtitle && <p className="text-gray-300 mt-3">{subtitle}</p>}
+
+      {subtitle ? (
+        <p className="mt-4 text-sm sm:text-base text-white/75">{subtitle}</p>
+      ) : null}
     </div>
   );
 }
+
+const fadeUp = {
+  initial: { opacity: 0, y: 28 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, amount: 0.35 },
+  transition: { duration: 0.65, ease: "easeOut" },
+};
 
 /* ========== Data ========== */
 const SERVICES = [
@@ -74,15 +93,12 @@ const SERVICES = [
   {
     title: "Photography",
     desc: "Editorial-style photography for brands, people, and automotive — composed with intent and finished with restraint.",
-    bullets: [
-      "20–40 carefully edited images",
-      "Web, social & print-ready delivery",
-    ],
+    bullets: ["Web, social & print-ready delivery"],
     tag: "Editorial",
   },
   {
     title: "Custom Projects",
-    desc: "Not seeing your project listed? From events to brand storytelling and beyond — I can tailor a film to match your exact vision.",
+    desc: "Not seeing your project listed? From events to brand storytelling and beyond — tailored to your exact vision.",
     bullets: [
       "Flexible scope",
       "Tailored deliverables",
@@ -119,11 +135,11 @@ function useAnchorNavigation() {
     const target = hash?.startsWith("#") ? hash : `#${hash}`;
     if (location.pathname !== "/") {
       navigate(`/${target}`);
-    } else {
-      const el = document.querySelector(target);
-      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-      else window.location.hash = target;
+      return;
     }
+    const el = document.querySelector(target);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    else window.location.hash = target;
   };
 
   return { goToAnchor };
@@ -137,7 +153,7 @@ function ScrollToHash() {
     const t = setTimeout(() => {
       const el = document.querySelector(hash);
       if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 50);
+    }, 60);
     return () => clearTimeout(t);
   }, [hash]);
 
@@ -151,13 +167,11 @@ function Layout({ children }) {
   const { goToAnchor } = useAnchorNavigation();
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 40);
-    handleScroll();
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
-
-  const closeMenu = () => setMenuOpen(false);
 
   const navItems = useMemo(
     () => [
@@ -169,9 +183,18 @@ function Layout({ children }) {
     []
   );
 
+  const closeMenu = () => setMenuOpen(false);
+
+  const handleAnchor = (hash) => {
+    closeMenu();
+    goToAnchor(hash);
+  };
+
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-black text-white font-sans">
+      {/* Keep it OFF unless you’ve rebuilt it to not tank performance */}
       <SnowOverlay enabled={false} count={28} />
+
       <header
         className={`sticky top-0 z-30 border-b transition-all duration-300 ${
           scrolled
@@ -180,7 +203,7 @@ function Layout({ children }) {
         }`}
       >
         <Section
-          className={`flex items-center justify-between transition-all duration-300 ${
+          className={`flex items-center justify-between ${
             scrolled ? "py-2" : "py-3"
           }`}
         >
@@ -188,51 +211,45 @@ function Layout({ children }) {
             <img
               src="/VoithoLOGOv2blk.png"
               alt="Voithó by RGH"
-              className="h-45 w-40"
+              className="h-12 w-auto"
             />
           </Link>
 
-          {/* Desktop nav */}
+          {/* Desktop */}
           <nav className="hidden md:flex items-center gap-6">
-            {navItems.map((item) => {
-              if (item.type === "route") {
-                return (
-                  <NavLink
-                    key={item.to}
-                    to={item.to}
-                    className={({ isActive }) =>
-                      `text-sm hover:underline ${isActive ? "underline" : ""}`
-                    }
-                  >
-                    {item.label}
-                  </NavLink>
-                );
-              }
-              return (
+            {navItems.map((item) =>
+              item.type === "route" ? (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  className={({ isActive }) =>
+                    `text-sm hover:underline ${isActive ? "underline" : ""}`
+                  }
+                >
+                  {item.label}
+                </NavLink>
+              ) : (
                 <button
                   key={item.hash}
                   type="button"
                   className="text-sm hover:underline"
-                  onClick={() => {
-                    closeMenu();
-                    goToAnchor(item.hash);
-                  }}
+                  onClick={() => handleAnchor(item.hash)}
                 >
                   {item.label}
                 </button>
-              );
-            })}
+              )
+            )}
 
             <button
               type="button"
-              onClick={() => goToAnchor("#contact")}
-              className="px-4 py-2 rounded-lg bg-black text-white text-sm hover:bg-gray-800"
+              onClick={() => handleAnchor("#contact")}
+              className="px-4 py-2 rounded-full bg-black text-white text-sm hover:bg-gray-800"
             >
               Check availability
             </button>
           </nav>
 
-          {/* Mobile hamburger */}
+          {/* Mobile toggle */}
           <button
             type="button"
             className="md:hidden flex flex-col justify-between w-7 h-5"
@@ -257,51 +274,40 @@ function Layout({ children }) {
           </button>
         </Section>
 
-        {/* Mobile dropdown */}
+        {/* Mobile menu */}
         <div
-          className={`
-            md:hidden overflow-hidden border-t border-black/10 bg-white/95
-            transition-all duration-300
-            ${menuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}
-          `}
+          className={`md:hidden overflow-hidden border-t border-black/10 bg-white/95 transition-all duration-300 ${
+            menuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+          }`}
         >
           <div className="px-4 pt-3 pb-4 flex flex-col gap-3 text-sm">
-            {navItems.map((item) => {
-              if (item.type === "route") {
-                return (
-                  <NavLink
-                    key={item.to}
-                    to={item.to}
-                    onClick={closeMenu}
-                    className={({ isActive }) =>
-                      `py-1 ${isActive ? "underline" : ""}`
-                    }
-                  >
-                    {item.label}
-                  </NavLink>
-                );
-              }
-              return (
+            {navItems.map((item) =>
+              item.type === "route" ? (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  onClick={closeMenu}
+                  className={({ isActive }) =>
+                    `py-1 ${isActive ? "underline" : ""}`
+                  }
+                >
+                  {item.label}
+                </NavLink>
+              ) : (
                 <button
                   key={item.hash}
                   type="button"
                   className="py-1 text-left"
-                  onClick={() => {
-                    closeMenu();
-                    goToAnchor(item.hash);
-                  }}
+                  onClick={() => handleAnchor(item.hash)}
                 >
                   {item.label}
                 </button>
-              );
-            })}
+              )
+            )}
 
             <button
               type="button"
-              onClick={() => {
-                closeMenu();
-                goToAnchor("#contact");
-              }}
+              onClick={() => handleAnchor("#contact")}
               className="mt-2 inline-flex justify-center px-4 py-2 rounded-full border border-black/30 text-sm"
             >
               Check availability
@@ -320,22 +326,22 @@ function Layout({ children }) {
               alt="Voithó by RGH"
               className="h-8 w-auto"
             />
-            <span className="text-gray-400">
+            <span className="text-white/55">
               © {new Date().getFullYear()} VoithóByRGH. All rights reserved.
             </span>
           </div>
 
-          <div className="flex items-center gap-3 text-gray-300">
+          <div className="flex items-center gap-3 text-white/70">
             <button
               type="button"
-              onClick={() => goToAnchor("#services")}
+              onClick={() => handleAnchor("#services")}
               className="hover:underline"
             >
               Services
             </button>
             <button
               type="button"
-              onClick={() => goToAnchor("#contact")}
+              onClick={() => handleAnchor("#contact")}
               className="hover:underline"
             >
               Contact
@@ -368,29 +374,26 @@ function Home() {
           />
         </div>
 
-        <div className="absolute inset-0 z-10 bg-gradient-to-r from-black/70 via-black/45 to-black/10" />
+        <div className="absolute inset-0 z-10 bg-gradient-to-r from-black/75 via-black/45 to-black/10" />
 
         <Section className="relative z-20 py-16 sm:py-24 !max-w-none !mx-0">
           <motion.div
-            className="max-w-3xl text-center sm:text-left px-6 sm:pl-12 mt-10 sm:mt-20"
-            initial={{ opacity: 0, y: 30 }}
+            className="max-w-3xl text-center sm:text-left px-6 sm:pl-12 mt-12 sm:mt-20"
+            initial={{ opacity: 0, y: 26 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            <h1 className="font-display text-3xl sm:text-5xl lg:text-6xl leading-[1.1]">
-              Timeless Photography & Cinematic films.
+            <h1 className="font-display text-4xl sm:text-6xl lg:text-7xl tracking-tight leading-[1.02]">
+              Timeless Photography
+              <span className="block"> & Cinematic Films.</span>
             </h1>
-            <p className="mt-6 text-base sm:text-lg text-white/85">
+
+            <p className="mt-6 text-base sm:text-lg text-white/80 max-w-xl">
               A visual storytelling studio for brands, people, and beautiful
-              spaces.
+              spaces — built for modern web and social.
             </p>
 
-            <motion.div
-              className="mt-10 flex flex-wrap justify-center sm:justify-start gap-3"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, ease: "easeOut", delay: 0.2 }}
-            >
+            <div className="mt-10 flex flex-wrap justify-center sm:justify-start gap-3">
               <a
                 href="#contact"
                 className="px-5 py-3 rounded-full bg-white text-black text-sm hover:bg-gray-200 transition"
@@ -399,11 +402,11 @@ function Home() {
               </a>
               <Link
                 to="/portfolio"
-                className="px-5 py-3 rounded-full border border-white/30 text-white text-sm hover:bg-white/10 transition"
+                className="px-5 py-3 rounded-full border border-white/25 text-white text-sm hover:bg-white/10 transition"
               >
                 View portfolio
               </Link>
-            </motion.div>
+            </div>
           </motion.div>
         </Section>
       </section>
@@ -412,12 +415,7 @@ function Home() {
       <Section id="services" className="py-16">
         <h2 className="sr-only">Services</h2>
 
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.4 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-        >
+        <motion.div {...fadeUp}>
           <Heading
             eyebrow="What we do"
             title="Photography & Videography — built to perform"
@@ -439,24 +437,29 @@ function Home() {
             <motion.div
               key={i}
               variants={{
-                hidden: { opacity: 0, y: 40 },
+                hidden: { opacity: 0, y: 26 },
                 visible: { opacity: 1, y: 0 },
               }}
               transition={{ duration: 0.5, ease: "easeOut" }}
-              whileHover={{ y: -4, scale: 1.02 }}
-              className="rounded-2xl border border-gray-800 p-5 hover:shadow-sm transition"
+              whileHover={{ y: -4, scale: 1.01 }}
+              className="rounded-2xl border border-white/10 bg-white/5 p-6 hover:bg-white/[0.07] transition"
             >
               <div className="flex items-center gap-3 mb-3">
-                <h3 className="text-lg font-semibold">{s.title}</h3>
-                <span className="ml-auto text-xs rounded-full bg-gray-800 border border-gray-700 px-2 py-1">
+                <h3 className="font-display text-xl tracking-tight leading-tight">
+                  {s.title}
+                </h3>
+                <span className="ml-auto text-[11px] rounded-full bg-white/10 border border-white/10 px-2 py-1 text-white/80">
                   {s.tag}
                 </span>
               </div>
-              <p className="text-sm text-gray-300 mb-3">{s.desc}</p>
-              <ul className="space-y-2 text-sm">
+
+              <p className="text-sm text-white/70 mb-4">{s.desc}</p>
+
+              <ul className="space-y-2 text-sm text-white/80">
                 {s.bullets.map((b, j) => (
                   <li key={j} className="flex items-start gap-2">
-                    {b}
+                    <span className="mt-[6px] h-1.5 w-1.5 rounded-full bg-white/60" />
+                    <span>{b}</span>
                   </li>
                 ))}
               </ul>
@@ -467,12 +470,7 @@ function Home() {
 
       {/* FAQ */}
       <Section id="faq" className="py-16">
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.4 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-        >
+        <motion.div {...fadeUp}>
           <Heading eyebrow="Good to know" title="FAQs" />
         </motion.div>
 
@@ -490,15 +488,15 @@ function Home() {
             <motion.div
               key={i}
               variants={{
-                hidden: { opacity: 0, y: 30 },
+                hidden: { opacity: 0, y: 22 },
                 visible: { opacity: 1, y: 0 },
               }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
+              transition={{ duration: 0.45, ease: "easeOut" }}
               whileHover={{ y: -3, scale: 1.01 }}
-              className="rounded-2xl border border-gray-800 p-5 bg-black"
+              className="rounded-2xl border border-white/10 bg-white/5 p-6"
             >
-              <h3 className="font-medium">{f.q}</h3>
-              <p className="text-sm text-gray-300 mt-2">{f.a}</p>
+              <h3 className="font-display text-xl tracking-tight">{f.q}</h3>
+              <p className="text-sm text-white/70 mt-2">{f.a}</p>
             </motion.div>
           ))}
         </motion.div>
@@ -508,16 +506,23 @@ function Home() {
       <div className="bg-white text-black border-y border-gray-200">
         <Section id="contact" className="py-16">
           <motion.div
-            initial={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 0, y: 26 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.5 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
+            viewport={{ once: true, amount: 0.45 }}
+            transition={{ duration: 0.65, ease: "easeOut" }}
           >
-            <Heading
-              eyebrow="Let’s talk"
-              title="Check availability"
-              subtitle="Tell me a little about your project and preferred date(s). I’ll reply with a tailored quote."
-            />
+            <div className="text-center max-w-3xl mx-auto mb-10">
+              <div className="mb-3 inline-flex items-center rounded-full border border-black/10 bg-black/[0.03] px-3 py-1 text-[11px] font-semibold tracking-wide text-black">
+                Let’s talk
+              </div>
+              <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl tracking-tight leading-[1.05]">
+                Check availability
+              </h2>
+              <p className="mt-4 text-sm sm:text-base text-black/70">
+                Tell me a little about your project and preferred date(s). I’ll
+                reply with a tailored quote.
+              </p>
+            </div>
           </motion.div>
 
           <motion.div
@@ -527,38 +532,33 @@ function Home() {
             viewport={{ once: true, amount: 0.3 }}
             variants={{
               hidden: {},
-              visible: { transition: { staggerChildren: 0.15 } },
+              visible: { transition: { staggerChildren: 0.12 } },
             }}
           >
             <motion.div
               variants={{
-                hidden: { opacity: 0, y: 30 },
+                hidden: { opacity: 0, y: 22 },
                 visible: { opacity: 1, y: 0 },
               }}
               transition={{ duration: 0.5, ease: "easeOut" }}
-              whileHover={{
-                y: -4,
-                scale: 1.01,
-                boxShadow: "0 0 28px rgba(0,0,0,0.3)",
-              }}
-              className="rounded-2xl border border-gray-700 bg-black text-white shadow-[0_8px_30px_rgba(0,0,0,0.12)] ring-1 ring-black/20 p-6"
+              whileHover={{ y: -4, scale: 1.01 }}
+              className="rounded-2xl border border-black/10 bg-black text-white shadow-[0_12px_40px_rgba(0,0,0,0.22)] p-6"
             >
               <ContactForm />
             </motion.div>
 
             <motion.div
               variants={{
-                hidden: { opacity: 0, y: 30 },
+                hidden: { opacity: 0, y: 22 },
                 visible: { opacity: 1, y: 0 },
               }}
-              transition={{ duration: 0.5, ease: "easeOut", delay: 0.05 }}
-              whileHover={{
-                y: -3,
-                scale: 1.01,
-                boxShadow: "0 0 24px rgba(0,0,0,0.28)",
-              }}
-              className="rounded-2xl border border-gray-700 bg-black text-white shadow-[0_8px_30px_rgba(0,0,0,0.12)] ring-1 ring-black/20 p-6 space-y-4 text-sm"
+              transition={{ duration: 0.5, ease: "easeOut" }}
+              whileHover={{ y: -3, scale: 1.01 }}
+              className="rounded-2xl border border-black/10 bg-black text-white shadow-[0_12px_40px_rgba(0,0,0,0.22)] p-6 space-y-4 text-sm"
             >
+              <div className="font-display text-2xl tracking-tight">
+                VoithóByRGH
+              </div>
               <div>📍 Paphos, Cyprus</div>
               <div>✉️ info@voithobyrgh.com</div>
               <a
@@ -599,17 +599,12 @@ function Portfolio() {
   return (
     <main className="py-16">
       <Section>
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.4 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-        >
+        <motion.div {...fadeUp}>
           <Heading eyebrow="Work" title="Portfolio" />
         </motion.div>
 
         <motion.div
-          className="grid gap-12 sm:grid-cols-1 lg:grid-cols-2 mt-12"
+          className="grid gap-12 lg:grid-cols-2 mt-12"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}
@@ -622,14 +617,14 @@ function Portfolio() {
             <motion.div
               key={i}
               variants={{
-                hidden: { opacity: 0, y: 40 },
+                hidden: { opacity: 0, y: 26 },
                 visible: { opacity: 1, y: 0 },
               }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
+              transition={{ duration: 0.55, ease: "easeOut" }}
               whileHover={{ y: -3, scale: 1.005 }}
-              className="bg-white/5 border border-gray-800 rounded-2xl overflow-hidden hover:shadow-xl transition p-6 flex flex-col items-center"
+              className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:bg-white/[0.07] transition p-6 flex flex-col items-center"
             >
-              {p.logo && (
+              {p.logo ? (
                 <div className="mb-6">
                   <img
                     src={p.logo}
@@ -637,9 +632,9 @@ function Portfolio() {
                     className="h-20 w-auto mx-auto"
                   />
                 </div>
-              )}
+              ) : null}
 
-              {p.kind === "video" && (
+              {p.kind === "video" ? (
                 <div className="relative w-full h-[500px] rounded-lg overflow-hidden mb-6">
                   <iframe
                     title={p.title}
@@ -650,14 +645,14 @@ function Portfolio() {
                     allowFullScreen
                   />
                 </div>
-              )}
+              ) : null}
 
-              <h3 className="text-2xl font-semibold mb-2 text-center">
+              <h3 className="font-display text-3xl tracking-tight mb-2 text-center">
                 {p.title}
               </h3>
-              {p.description && (
-                <p className="text-gray-400 text-center">{p.description}</p>
-              )}
+              {p.description ? (
+                <p className="text-white/70 text-center">{p.description}</p>
+              ) : null}
             </motion.div>
           ))}
         </motion.div>
@@ -718,13 +713,13 @@ function ContactForm() {
       <div className="grid sm:grid-cols-2 gap-4">
         <input
           name="name"
-          className="w-full border rounded-lg px-3 py-2 text-black"
+          className="w-full border border-white/15 bg-white text-black rounded-lg px-3 py-2"
           placeholder="Your name"
           required
         />
         <input
           name="email"
-          className="w-full border rounded-lg px-3 py-2 text-black"
+          className="w-full border border-white/15 bg-white text-black rounded-lg px-3 py-2"
           type="email"
           placeholder="Email"
           required
@@ -733,7 +728,7 @@ function ContactForm() {
 
       <textarea
         name="message"
-        className="w-full border rounded-lg px-3 py-2 text-black"
+        className="w-full border border-white/15 bg-white text-black rounded-lg px-3 py-2"
         rows={5}
         placeholder="Tell me about your vision…"
         required
