@@ -56,6 +56,7 @@ const PLACEHOLDER_COUNT = 8;
 
 const PEOPLE_IMAGES = [
   "/photos/people/ROB00675.jpg",
+  "/photos/people/ROB00664.jpg",
   "/photos/people/ROB09388.jpg",
   "/photos/people/ROB00688.jpg",
   "/photos/people/ROB04863.jpg",
