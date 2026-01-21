@@ -9,3 +9,12 @@ node_modules
 node_modules
 node_modules
 node_modules
+
+# dependencies
+node_modules/
+
+# build caches
+.cache/
+node_modules/.cache/
+.pnpm-store/
+.pnpm/
