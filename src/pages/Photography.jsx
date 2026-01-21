@@ -105,6 +105,7 @@ const PHOTO_SECTIONS = [
   {
     id: "objects",
     title: "Objects",
+    logo: "/boostedshots.png",
     subtitle:
       "Product and automotive photography built around form, material, and desire.",
     description:
@@ -459,9 +460,21 @@ export default function Photography() {
               <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-8">
                 <div className="max-w-2xl min-w-0">
                   {/* Display font belongs here too */}
-                  <h2 className="font-display text-3xl sm:text-4xl tracking-tight leading-[1.05]">
-                    {sec.title}
-                  </h2>
+                  <div className="flex items-center justify-between gap-4">
+                    <h2 className="font-display text-3xl sm:text-4xl tracking-tight leading-[1.05]">
+                      {sec.title}
+                    </h2>
+
+                    {sec.logo && (
+                      <img
+                        src={sec.logo}
+                        alt={`${sec.title} logo`}
+                        className="h-18 w-auto sm:h-20 object-contain opacity-95"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    )}
+                  </div>
 
                   <p className="text-gray-300 mt-2 leading-relaxed">
                     {sec.subtitle}
